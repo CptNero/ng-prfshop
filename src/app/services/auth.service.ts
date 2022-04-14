@@ -11,7 +11,7 @@ export class AuthService {
   public currentUser: Observable<User>;
 
   constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('userInfo') || '{}'));
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user') || '{}'));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   public isAuthenticated() : Boolean {
-    let userData = localStorage.getItem('userInfo') || '{}'
+    let userData = localStorage.getItem('user') || '{}'
 
     if (JSON.parse(userData) && userData != '{}') {
       return true;
@@ -30,17 +30,17 @@ export class AuthService {
   }
 
   public setUserInfo(user: User){
-    localStorage.setItem('userInfo', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   login(user: User) {
-    return this.http.post<User>(`${environment.apiUrl}/login`, user)
+    return this.http.post<User>(`${environment.apiUrl}/login`, user, {withCredentials: true})
   }
 
   logout(user: User) {
     // remove user from local storage and set current user to null
-    localStorage.removeItem('userInfo');
-    this.http.post<User>(`${environment.apiUrl}/logout`, user)
+    localStorage.removeItem('user');
+    this.http.post<User>(`${environment.apiUrl}/logout`, user, {withCredentials: true})
     // @ts-ignore
     this.currentUserSubject.next(null);
     this.router.navigate(['/'])

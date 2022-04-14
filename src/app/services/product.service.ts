@@ -9,14 +9,14 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   add(product: Product) {
-    return this.http.post<Product>(`${environment.apiUrl}/products`, product)
+    return this.http.post<Product>(`${environment.apiUrl}/products`, product, {withCredentials: true})
   }
 
   delete(id: string) {
-    return this.http.delete(`${environment.apiUrl}/products/${id}`, {responseType: 'text'})
+    return this.http.delete(`${environment.apiUrl}/products/${id}`, {withCredentials: true, responseType: 'text'})
   }
 
   getAll(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${environment.apiUrl}/products`)
+    return this.http.get<Product[]>(`${environment.apiUrl}/products`, {withCredentials: true})
   }
 }
